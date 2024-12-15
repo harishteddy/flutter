@@ -10,6 +10,11 @@ import 'package:smartech_nudges/tracker/route_obersver.dart';
 import 'package:smartech_push/smartech_push.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:smartech_push/smt_notification_callback.dart';
+import 'AppInboxScreen.dart';
+import 'DashboardScreen.dart';
+import 'LoginScreen.dart';
+import 'ProfileUpdateScreen.dart';
+import 'RegisterScreen.dart';
 
 @pragma('vm:entry-point')
 
@@ -30,34 +35,6 @@ Future<void> main() async {
 
 
   print("smt1");
-
-
-
-  List<MessageCategory> categoryList = [];
-  SmartechAppinbox().getAppInboxCategoryWiseMessageList(categoryList: categoryList?.where((element) => element.selected).map((e) => e.name).toList() ?? []).then((value) {
-    // Here you will get list of  appinbox messages according to selected category list
-    print("response app inbox4"+value.toString());
-  });
-  SmartechAppinbox().getAppInboxMessagesByApiCall(
-      messageLimit:  10,
-      smtInboxDataType:  "all",
-      categoryList: categoryList.where((element) => element.selected).map((e) => e.name).toList()).then((value) {
-    // Here you will get list of app inbox messages
-    print("response app inbox3"+value.toString()+categoryList.toString());
-  });
-
-  SmartechAppinbox().getAppInboxMessages().then((value) {
-    // Here you will get list of all appinbox messages from local db
-    print("response app inbox"+value.toString());
-  });
-
-  SmartechAppinbox().getAppInboxCategoryList().then((value) {
-    // Here you will get list of available categories for appinbox messages
-    print("response1 app inbox"+value.toString());
-
-
-  });
-
 
   Smartech().onHandleDeeplink((String? smtDeeplinkSource, String? smtDeeplink, Map<dynamic, dynamic>? smtPayload, Map<dynamic, dynamic>? smtCustomPayload) async {
 // Perform action on click of Notification
@@ -93,46 +70,6 @@ Future<void> main() async {
     }
     // Handle if not from Smartech
   });
-
-
-
-
-
-/*
-// For foreground state
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-
-    print("pndata12 :");
-    bool isFromSmt = await SmartechPush().isNotificationFromSmartech(message.data.toString());
-    if(isFromSmt){
-      SmartechPush().handlePushNotification(message.data.toString());
-      print("fg pndata :" + message.data.toString());
-
-      print("pndata :2");
-      return;
-    }
-    // handle if not from Smartech
-  });
-
-
-// For background/terminated state
-  @pragma('vm:entry-point')
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    print("pndata13:");
-    await Firebase.initializeApp();
-    bool isFromSmt = await SmartechPush().isNotificationFromSmartech(message.data.toString());
-    if(isFromSmt){
-      SmartechPush().handlePushNotification(message.data.toString());
-      print("bg pndata :" + message.data.toString());
-
-      print("pndata3 :");
-      return;
-    }
-    // handle if not from Smartech
-  }
-*/
- 
-
 }
 
 class _PxDeeplinkListenerImpl extends PxDeeplinkListener {
@@ -178,16 +115,8 @@ class MyApp extends StatelessWidget {
 
     SmartechPush().requestNotificationPermission(MyNotificationPermissionCallback());
 
-
-
-
-
-
-
     //NetcorePX.instance.setUserId("harishreddy.rudru@gmail.com");
     print("smtDeeplinkSource value");
-
-
 
 
     return SmartechPxWidget(
@@ -199,12 +128,24 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
 
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        //home: const MyHomePage(title: 'Flutter Demo Home Page'),
+
+        initialRoute: '/login', // Set LoginScreen as the initial screen
+        routes: {
+          '/login': (context) => LoginScreen(),
+          '/register': (context) => RegisterScreen(),
+          '/dashboard': (context) => const DashboardScreen(),
+          '/appInbox': (context) => const AppInboxScreen(),
+          '/profileUpdate': (context) => ProfileUpdateScreen(),
+          '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
+        },
 
       ),
     );
   }
 }
+
+
 
 class MyNotificationPermissionCallback implements SMTNotificationPermissionCallback {
   @override

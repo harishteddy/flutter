@@ -27,6 +27,7 @@ apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace "com.example.testflutter"
     compileSdk 34
     ndkVersion flutter.ndkVersion
 
